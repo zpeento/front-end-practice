@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>百度搜索框效果(可用键盘选择)</title>
+	<style>
+		#completionBox{
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div id="wrap">
+		<input type="text" id="completionBox">
+		<button>百度一下</button>
+		<div id="completionBox">
+			<ul>
+				<li>你好的日子</li>
+				<li>你好乔安</li>
+				<li>你好疯子</li>
+			</ul>
+		</div>
+	</div>
+	<script>
+		window.onload = function(){
+
+		}
+		function AutoComplete(searchBoxId,autoObj,arr){
+			var searchBox = document.querySelector("#"+obj);
+
+		}
+		var searchBox = document.querySelector("#"+obj);
+		var completionBox = document.querySelector("#completionBox");
+
+		searchBox.onChange = function(){
+			completionBox.display = 'block';
+		}
+	</script>
+</body>
+</html>
