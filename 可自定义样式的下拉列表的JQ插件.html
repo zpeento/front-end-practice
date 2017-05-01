@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>可自定义样式的下拉列表JQ插件</title>
+</head>
+<body>
+	<ul class="list">
+		<li>导航列表1
+			<ul class="nav">
+				<li>导航列表1.1</li>
+				<li>导航列表1.2</li>
+				<li>导航列表1.3</li>
+			</ul>
+		</li>
+		<li>导航列表2
+			<ul class="nav">
+				<li>导航列表2.1</li>
+				<li>导航列表2.2</li>
+				<li>导航列表2.3</li>
+			</ul>
+		</li>
+	</ul>
+	<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script>
+		(function($){  
+		   	$.fn.extend({  
+		       'nav':function(color){  
+		           //设置css样式  
+		            $(this).find('.nav').css({  
+		               'list-style':'none',  
+		               'margin':0,  
+		               'padding':0,  
+		               'display':'none',  
+		               'color':color  
+		            });  
+		             //设置下拉，上拉动画  
+		            $(this).find('.nav').parent().hover(function(){  
+		                $(this).find('.nav').slideDown('normal');  
+		            },function(){  
+		                $(this).find('.nav').stop().slideUp('normal');  
+		            });  
+		         return this;  
+		       }  
+		   	});  
+		})(jQuery); 
+		$(function(){  
+		    //全局$.nav();  
+		    //局部  
+		    $('.list').eq(0).nav('orange');  
+		 });  
+	</script>
+</body>
+</html>
