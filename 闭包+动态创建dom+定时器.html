@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		/**
+		 *
+		 在container中动态创建5个按钮，使得每个按钮的显示内容分别为1到5的整数，点击每个按钮的时候，在控制台输出n的值，n为该按钮的显示内容。在container中创建显示内容为all的按钮，使得点击按钮时，按照从1到5的顺序逐条执行如下任务：延时n秒后在控制台输出n的值
+		 *
+		 @method bar
+		 *
+		 *
+		 @param {number} n 生成的按钮的个数
+		 *
+		 @return undefined
+		 */
+
+		function bar(n) {
+			var fragment = document.createDocumentFragment();
+
+			for(var i = 1; i < n+1; i++) {
+				var button = document.createElement('button')
+				var buttonValue = document.createTextNode(i)
+				button.appendChild(buttonValue);
+				button.onclick = (function(i) {
+					var m = i
+					return function() {
+						alert(m)
+					}
+				})(i)
+				fragment.appendChild(button)
+			}
+
+			var buttonAll = document.createElement('button')
+			var buttonAllValue = document.createTextNode('all');
+			buttonAll.appendChild(buttonAllValue)
+			fragment.appendChild(buttonAll);
+			console.log(fragment)
+			document.body.appendChild(fragment)
+
+			buttonAll.addEventListener('click', function() {
+				var go = 1;
+				var max = n;
+				
+				setTimeout(timeGo, 1000)
+				
+				function timeGo() {
+
+					if(go <= max) {
+
+						console.log(go)
+						go++
+						setTimeout(timeGo, 1000)
+					}					
+				}
+			}, false)
+		}
+
+		bar(5)
+	</script>
+</body>
+</html>
