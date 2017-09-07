@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>模拟setInterval</title>
+</head>
+<body>
+	<script>
+		var intervalTimer = function(fn, time, delay) {
+			var _time = time;
+			var _delay = delay;
+			var _fn = fn;
+
+			if(_time <= 0 || _delay < 0 || typeof _fn != 'function') {
+				return false
+			}
+
+			setTimeout(intervalGo, _delay)
+
+			function intervalGo() {
+				if(_time == 0) return;
+
+				fn();
+				_time--
+				
+				setTimeout(intervalGo(), _delay)
+			}
+		}
+	</script>	
+</body>
+</html>

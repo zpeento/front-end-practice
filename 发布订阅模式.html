@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>发布订阅模式</title>
+</head>
+<body>
+	<script>
+	function PubSub() {
+		this.handlers = []
+	}
+
+	PubSub.prototype = {
+		//订阅事件
+		on: function(eventType, handler) {
+			var self = this;
+			if(!(eventType in self.handlers)) {
+				self.handlers[eventType] = [];
+			}
+
+			self.handlers[eventType].push(handler);
+			return this;
+		},
+
+		//发布事件
+		emit: function(eventType) {
+			var self = this;
+			var handlerArgs = Array.prototype.slice.call(arguments,1);
+
+			for(var i = 0 ; i < self.handlers[eventType].length ; i++) {
+				self.handlers[eventType][i].apply(self, handlerArgs);
+			}
+
+			return self
+		},
+
+		//删除订阅事件
+		off: function(eventType, handler) {
+			var curEvent = this.handlers[eventType];
+			if(curEvent) {
+				curEvent.map(function(v,i) {
+					if(v === handler) {
+						curEvent.splice(i,1)
+						break
+					}
+				})
+			}
+
+			return this;
+		}
+	}
+	
+	var pub = new PubSub();
+	
+		
+	</script>
+</body>
+</html>
