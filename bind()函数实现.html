@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>bind函数实现</title>
+</head>
+<body>
+	<script>
+		Function.prototype.testBind = function(oThis) {
+
+			var self = this;
+
+			try {
+				if(typeof self != 'function') {
+					throw new new Error("not function")
+				}	
+			}catch(e) {
+				console.log(e)
+			}
+
+			var args = Array.prototype.slice.call(arguments);
+			var oThis = args.shift();
+
+			return function() {
+				var newArgs = Array.prototype.slice.call(arguments)
+				var finalArgs = args.concat(newArgs)
+				self.apply(oThis,finalArgs)
+			}
+		}
+		var value = 0;
+		var testObj = {
+			value: 1
+		}
+		function test(m,n,k) {
+			console.log(m+n+k+(this.value))
+		}
+		var testgo = test.testBind(testObj,2,3)
+		testgo(4)
+	</script>
+</body>
+</html>
