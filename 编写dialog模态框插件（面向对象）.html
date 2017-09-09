@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>编写dialog模态框插件（面向对象）</title>
+</head>
+<body>
+	<div id="dialog">
+		<h4></h4>
+		<p></p>
+		<span class="close">X</span>
+	</div>
+
+	<script>
+		function Dialog(selector,title,text) {
+			var dialogContainer = document.querySelector(selector);
+			this.dialogContainer = dialogContainer;
+			this.titleContainer = dialogContainer.querySelector('h4');
+			this.title = title;
+			this.textContainer = dialogContainer.querySelector('p');
+			this.text = text;
+			this.closeButton = dialogContainer.querySelector('.close');
+			this.init()
+		}
+		Dialog.prototype.init = function() {
+			var self = this;
+			self.titleContainer.innerHTML = self.title;
+			self.textContainer.innerHTML = self.text;
+
+			self.close
+
+			
+			
+		}
+
+		Dialog.prototype.close = function() {
+			var self = this;
+
+			if(document.addEventListener) {
+				self.closeButton.addEventListener(
+					'click',
+					closeFunction,
+					false
+				)
+			}else {
+				self.closeButton.attachEvent("onclick", closeFunction);
+			}
+
+			function closeFunction() {
+				self.dialogContainer.style.display = 'none'
+				self.clear()
+			}
+		}
+
+
+		Dialog.prototype.clear = function() {
+
+		}
+	</script>
+</body>
+</html>
