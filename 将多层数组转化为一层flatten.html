@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>将多层数组转化为一层</title>
+</head>
+<body>
+	实现一个flatten函数，将一个嵌套多层的数组 array（数组） (嵌套可以是任何层数)转换为只有一层的数组，数组中元素仅基本类型的元素或数组，不存在循环引用的情况。Ex: flatten([1, [2], [3, [[4]]]]) => [1, 2, 3, 4];
+	<script>
+		var test = [1, [2], [3, [[4]]]]
+		
+		function flatten(arr) {
+			var res = []
+
+			flattenInner(arr)
+
+			function flattenInner(arr) {
+				arr.map(function(value) {
+					if(value instanceof Array) {
+						flattenInner(value)
+					}else {
+						res.push(value)
+					}
+				})
+			}
+
+			return res			
+		}	
+		console.log(flatten([1, [2], [3, [[4]]]]))
+	</script>
+</body>
+</html>
