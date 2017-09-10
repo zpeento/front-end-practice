@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>纯css实现点击显示和关闭modal</title>
+	<style>
+		button{
+			background-color: #999;
+			color: #fff;
+			border-radius: 2px;
+			border:none;
+			padding: 5px 10px;
+		}
+		#modal{
+			display: none;
+			position: fixed;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			background-color: rgba(0,0,0,0.3);
+		}
+		.close{
+			position: absolute;;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+		#modal:target {
+			display: block;
+		}
+	</style>
+</head>
+<body>
+	<a href="#modal"  class="show"><button>显示</button></a>
+	<div id="modal">
+		<a href="#"  class="close"><button>关闭</button></a>
+	</div>
+</body>
+</html>
