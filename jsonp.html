@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+		var getJsonp = function(options) {
+			if(!options.url) {
+				console.log('必须传入url')
+				return
+			}
+
+			var url = options.url;
+
+			var hasFired = false
+
+			var cbname = 'jsonp' + new Date().getTime();
+
+			window[cbname] = function(data) {
+				hasFired = true;
+				if(options.success) {
+					options.success(data)
+				}
+				document.body.removeChild(script);				
+				window[cbname] = null;
+			}
+
+			if(url.indexOf('?') == -1){
+				url += '?'
+			}else{
+				url += '&'
+			}
+
+			url += 'callback=' +cbname;
+
+			var script = document.createElement('script');
+			
+			//错误处理
+			script.onload = function() {
+				if(!hasFired) {
+					window[cbname] = null;
+					document.body.removeChild(script);
+					if(options.error) {
+						options.error()
+					}
+				}
+			}
+
+			script.src = url;
+
+			document.body.appendChild(script);
+
+			//超时处理
+			if(options.time) {
+				setTimeout(function() {
+					if(!hasFired) {
+						window[cbname] = null;
+						document.body.removeChild(script);
+						if(options.overtime) {
+							options.overtime()
+						}
+					}
+				}, options.time)
+			}
+		}
+
+		getJsonp({
+			time: '10000',
+			url: 'http://51.com',
+			success:function(data) {
+				console.log(data)
+			},
+			error:function() {
+				console.log('请求错误啦')
+			},
+			overtime:function(){
+				console.log('请求超时啦')
+			}
+		})
+	</script>
+</body>
+</html>

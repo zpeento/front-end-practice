@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <div id="app">
+        <input type="text" v-model="text">
+        {{text}}
+    </div>
+    <div id="huh"></div>
+    <script>
+        function Emitter() {
+            this.subs = []
+        }
+
+        Emitter.prototype.addSub = function(sub) {
+            this.subs.push(sub)
+        }
+
+        Emitter.prototype.notify = function(value) {
+            this.subs.map(function(sub) {
+                sub.update(value);
+            })
+        }
+
+        function Watcher (vm, node, name) {
+            Emitter.target = this;
+            this.name = name;
+            this.node = node;
+            this.vm = vm;
+            this.value = this.vm[this.name];
+            this.node.nodeValue = this.value;
+            Emitter.target = null
+        }
+
+        Watcher.prototype.update = function() {
+            this.value = this.vm[this.name];
+            this.node.nodeValue = this.value
+        }
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                text: "he world"
+            }
+        })        
+
+        function Vue(options) {
+            this.data = options.data;
+
+            var data  = this.data;
+
+            //在这里将数据属性转为访问器属性，
+            //将vue.data中所有的属性转为访问器属性
+            //同时生成一个对应该属性的发布者，用于对所有绑定该属性的地方发布事件
+            //当使用get方法即获取值的时候就将该事件插入观察者队列
+            //当使用set方法的时候，即改变该属性的值，此时进行事件发布
+            observer(data, this);
+
+            var id = options.el;
+
+            //对对应的DOM进行解析和劫持
+            var dom = nodeToFragment(document.querySelector(id), this);
+
+            document.querySelector(id).appendChild(dom)
+        }
+
+        function observer(dataObj, vm) {
+            Object.keys(dataObj).forEach(function(key) {
+                defineReactive(vm, key, dataObj[key])
+            })
+        }
+
+        function defineReactive(obj, key, value) {
+            //利用闭包，生成一个观察者队列
+            var dep = new Emitter();
+
+            var curValue = value;
+
+            Object.defineProperty(obj,key,{
+
+                get: function() {
+
+                    //添加订阅者到主题对象
+                    if(Emitter.target) {
+                        dep.addSub(Emitter.target)
+                    }
+                    
+                    return curValue
+                },
+
+                set: function(newValue) {
+                    //当输入的值没有发生变化时，也不做变化
+                    if(newValue == curValue) return
+
+                    curValue = newValue;
+
+                    //只有当v-model的值发生变动，即输入框触发双向绑定时会触发
+                    dep.notify(curValue);
+                }
+            })
+        }
+
+        function nodeToFragment(node, vm) {
+            var frag = document.createDocumentFragment();
+            var child;
+
+            //非常厉害，直接将原来的节点删除，重新创建
+            while(child = node.firstChild){
+                compile(child, vm);
+                frag.append(child);
+            }
+
+            return frag;
+        }
+
+        function compile(node, vm) {
+            var reg = /\{\{(.*?)\}\}/;
+
+            //元素节点
+            if(node.nodeType == 1) {
+                var attrs = node.attributes;
+
+                for(var i = 0 ; i < attrs.length ; i++) {
+                    if(attrs[i].nodeName == 'v-model') {
+                        //获取v-model绑定的属性名
+                        var name = attrs[i].nodeValue;
+
+                        node.addEventListener('input', function(e) {
+                            vm[name] = e.target.value
+                        })                        
+                        //使用data中的值对元素进行赋值
+                        node.value = vm[name];
+                        node.removeAttribute('v-model');
+                    }
+                }
+            }
+            //文本节点
+            if(node.nodeType == 3) {
+                if(reg.test(node.nodeValue)) {
+                    var name = RegExp.$1;//获取匹配到的字符串
+                    name = name.trim();
+                    // node.nodeValue = vm[name];
+
+                    //创建一个观察者对象
+                    new Watcher(vm, node, name);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
